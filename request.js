@@ -1,1 +1,34 @@
-var nearbySearchQueryString = "https://api.tomtom.com/search/2/nearbySearch/.json?lat=41.873&lon=-72.485&radius=10000&categorySet=7311&view=Unified&relatedPois=off&key=aVjoheV1VbfmTkRCB3luQaSDKSfmQFD3";
+function getRequest()
+{
+	var key = "ZlHegspJec";
+	key += "rZTgV4F5Ql";
+	key += "3iNNsHTceP";
+	key += "MOq6Anmb17";
+	
+	var date = new Date();
+	
+	var startYear = date.getFullYear();
+	var endYear = startYear;
+	
+	
+	var startMonth = date.getMonth();
+	var endMonth = date.getMonth()+1;
+	
+	if (startMonth == 0)
+	{
+		startMonth = 12;
+		startYear -= 1;
+	}
+	
+	var endMonthString = endMonth.toString();
+	if (endMonthString.length < 2) { endMonthString = "0" + endMonthString; }
+	
+	var startMonthString = startMonth.toString();
+	if (startMonthString.length < 2) { startMonthString = "0" + startMonthString; }
+	
+	var startDateString = `${startYear}-${startMonthString}`;
+	var endDateString = `${endYear}-${endMonthString}`;
+
+	
+	return `https://api.eia.gov/v2/petroleum/pri/gnd/data/?frequency=monthly&data[0]=value&start=${startDateString}&end=${endDateString}&sort[0][column]=duoarea&sort[0][direction]=asc&offset=0&length=5000&api_key=${key}`;
+}
