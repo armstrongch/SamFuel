@@ -15,5 +15,6 @@ function setup()
 	
 	$('#requestIFrame').prop('src', nearbySearchQueryString);
 	
-	var results = jQuery.parseJSON()
+	var body = $('#requestIFrame').contents().find("body");
+	//var results = jQuery.parseJSON();
 }
