@@ -1,0 +1,1 @@
+var nearbySearchQueryString = "https://api.tomtom.com/search/2/nearbySearch/.json?lat=41.873&lon=-72.485&radius=10000&categorySet=7311&view=Unified&relatedPois=off&key=aVjoheV1VbfmTkRCB3luQaSDKSfmQFD3";
