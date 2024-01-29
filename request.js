@@ -20,6 +20,13 @@ function getRequest()
 		startYear -= 1;
 	}
 	
+	//test
+		/*startMonth = 5;
+		endMonth = 6;
+		startYear = 2023;
+		endYear = 2023;*/
+	//test
+	
 	var endMonthString = endMonth.toString();
 	if (endMonthString.length < 2) { endMonthString = "0" + endMonthString; }
 	

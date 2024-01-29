@@ -14,26 +14,12 @@
 			<p id='regularPrice'></p>
 			<p id='dieselPrice'></p>
 			<p id='milesPerWeek'>Miles Per Week: <input id="mpwInput" type="number" value="900" onchange="loadTable();"></p>
+			<table id="vehicleTable"></table>
 			
-			<table id="vehicleTable" >
-				<thead>
-					<tr>
-						<th>Vehicle</th>
-						<th>Average MPG</th>
-						<th>Miles per Week, Year</th>
-						<th>Gas Type</th>
-						<th>Gas Price</th>
-						<th>Yearly Cost</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			
-			<p>New Vehicle Name: <input id='nv_nameInput'></p>
-			<p>New Vehicle MPG: <input id='nv_mpgInput' type="number"></p>
+			<p>New Vehicle Name: <input id='nv_nameInput' onchange='changeNewVehicleInput()'></p>
+			<p>New Vehicle MPG: <input id='nv_mpgInput' type="number" onchange='changeNewVehicleInput()'></p>
 			<p>New Vehicle Fuel Type:
-				<select id='nv_fuelTypeSelect'>
+				<select id='nv_fuelTypeSelect' onchange='changeNewVehicleInput()'>
 					<option value="0">Regular</option>
 					<option value="1">Diesel</option>
 				</select>

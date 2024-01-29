@@ -44,8 +44,8 @@ function loadContent()
 	
 	$('#loadingP').css('display', 'none');
 	$('#dataDiv').css('display', 'block');
-	$('#regularPrice').html(`Average Price of Regular Gas in New England last month: ${USDollar.format(regularValue)}`);
-	$('#dieselPrice').html(`Average Price of Diesel in New England last month: ${USDollar.format(dieselValue)}`);
+	$('#regularPrice').html(`Average Price of <strong>Regular</strong> Gas in New England last month: <strong>${USDollar.format(regularValue)}</strong>`);
+	$('#dieselPrice').html(`Average Price of <strong>Diesel</strong> in New England last month: <strong>${USDollar.format(dieselValue)}</strong>`);
 
 	loadTable();
 	
@@ -53,7 +53,62 @@ function loadContent()
 	
 }
 
+function newVehicle()
+{
+	var newVehicle_Name = $('#nv_nameInput')[0].value;
+	var newVehicle_MPG = $('#nv_mpgInput')[0].value;
+	var newVehicle_FuelType = fuel_types.GAS;
+	if (parseInt($('#nv_fuelTypeSelect')[0].value) == "1")
+	{
+		newVehicle_FuelType = fuel_types.DIESEL;
+	}
+	
+	var newVehicle_hasName = newVehicle_Name != "";
+	var newVehicle_hasValidMPG = !isNaN(Number.parseFloat(newVehicle_MPG));
+	var newVehicle_hasValidFuelType = !isNaN(Number.parseFloat(newVehicle_FuelType)) && (newVehicle_FuelType == 0 || newVehicle_FuelType == 1);
+	
+	if (newVehicle_hasName && newVehicle_hasValidMPG && newVehicle_hasValidFuelType)
+	{
+		return {
+			valid: true,
+			vehicle: new vehicle(newVehicle_Name, Number.parseFloat(newVehicle_MPG), newVehicle_FuelType)
+		};
+	}
+	else
+	{
+		return { valid: false, vehicle: null };
+	}
+	
+}
+
+function changeNewVehicleInput()
+{
+	var newVehicleCheck = newVehicle();
+	if (newVehicleCheck.valid)
+	{
+		loadTable();
+	}
+}	
+
 function loadTable()
+{
+	$('#vehicleTable').html(`<thead><tr><th>Vehicle</th><th>Average MPG</th><th>Miles per Week,Year</th><th>Gas Type</th><th>Gas Price</th><th>Yearly Cost</th></tr></thead><tbody></tbody>`);
+	
+	for (var i = 0; i < vehicles.length; i += 1)
+	{
+		var v = vehicles[i];
+		addVehicleToTable(v);
+	}
+	
+	var newVehicleCheck = newVehicle();
+	if (newVehicleCheck.valid)
+	{
+		addVehicleToTable(newVehicleCheck.vehicle);
+	}
+	
+}
+
+function addVehicleToTable(vehicle)
 {
 	let USDollar = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -63,43 +118,24 @@ function loadTable()
 	var mpw = Number.parseInt($('#mpwInput')[0].value);
 	var mpy = mpw*52;
 	
-	$('#vehicleTable').html(`<thead><tr><th>Vehicle</th><th>AverageMPG</th><th>MilesperWeek,Year</th><th>GasType</th><th>GasPrice</th><th>YearlyCost</th></tr></thead><tbody></tbody>`);
+	var gasTypeName = "Regular";
+	var gasPrice = regularValue;
 	
-	/*<p>New Vehicle Name: <input id='nv_nameInput'></p>
-	<p>New Vehicle MPG: <input id='nv_mpgInput' ></p>
-	<p>New Vehicle Fuel Type:
-		<select id='nv_fuelTypeSelect'>
-			<option value="0">Regular</option>
-			<option value="1">Diesel</option>
-		</select>
-	</p>*/
-	
-	var newVehicle_hasName = $('#nv_nameInput')[0].value != "";
-	var newVehicle_hasValid
-	
-	for (var i = 0; i < vehicles.length; i += 1)
+	if (vehicle.fuel_type == fuel_types.DIESEL)
 	{
-		var gasTypeName = "Regular";
-		var gasPrice = regularValue;
-		
-		if (vehicles[i].fuel_type == fuel_types.DIESEL)
-		{
-			gasTypeName = "Diesel";
-			gasPrice = dieselValue;
-		}
-		
-		var yearlyGallons = mpy / vehicles[i].mpg;
-		var yearlyCost = yearlyGallons * gasPrice;
-		
-
-		$('#vehicleTable > tbody:last-child').append(`<tr>
-			<td>${vehicles[i].name}</td>
-			<td>${vehicles[i].mpg}</td>
-			<td>${mpw}, ${mpy}</td>
-			<td>${gasTypeName}</td>
-			<td>${USDollar.format(gasPrice)}</td>
-			<td>${USDollar.format(yearlyCost)}</td>
-		</tr>`);	
+		gasTypeName = "Diesel";
+		gasPrice = dieselValue;
 	}
 	
+	var yearlyGallons = mpy / vehicle.mpg;
+	var yearlyCost = yearlyGallons * gasPrice;
+
+	$('#vehicleTable > tbody:last-child').append(`<tr>
+		<td>${vehicle.name}</td>
+		<td>${vehicle.mpg}</td>
+		<td>${mpw}, ${mpy}</td>
+		<td>${gasTypeName}</td>
+		<td>${USDollar.format(gasPrice)}</td>
+		<td>${USDollar.format(yearlyCost)}</td>
+	</tr>`);	
 }
